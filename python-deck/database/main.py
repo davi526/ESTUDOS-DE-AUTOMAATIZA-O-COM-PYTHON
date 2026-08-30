@@ -14,55 +14,58 @@ def definir_opcao():
 
     return input("Opção: ")
 
+while True:
 
-opcao = definir_opcao()
-
-
-if opcao == "1":
-
-    database.Listar_botoes()
-
-elif opcao == "2":
-
-    nome = input("Digite o nome para o botão: ")
-
-    tipo = input("Digite o tipo do botão: ")
-
-    acao = input("Digite a ação do botão: ")
-
-    database.inserir_botao(
-        nome,
-        tipo,
-        acao
-    )
+    opcao = definir_opcao()
 
 
-elif opcao == "3":
+    if opcao == "1":
 
-    id_botao = input("Digite o ID do botão que deseja editar: ")
+        database.Listar_botoes()
 
-    nome = input("Digite o novo nome para o botão: ")
-    tipo = input("Digite o novo tipo do botão: ")
-    acao = input("Digite a nova ação do botão: ")
+    elif opcao == "2":
 
-    database.editar_botao(
-        id_botao,
-        nome,
-        tipo,
-        acao
-    )
+        nome = input("Digite o nome para o botão: ")
 
-elif opcao == "4":
+        tipo = input("Digite o tipo do botão: ")
 
-    id_botao = input("Digite o ID do botão que deseja deletar: ")
+        acao = input("Digite a ação do botão: ")
 
-    database.deletar_botao(id_botao)
+        database.inserir_botao(
+            nome,
+            tipo,
+            acao
+        )
 
-elif opcao == "5":
 
-    print("Saindo do programa...")
-    
+    elif opcao == "3":
 
-else:
+        id_botao = input("Digite o ID do botão que deseja editar: ")
 
-    print("Opção inválida. Tente novamente.")
+        nome = input("Digite o novo nome para o botão: ")
+        tipo = input("Digite o novo tipo do botão: ")
+        acao = input("Digite a nova ação do botão: ")
+
+        database.editar_botao(
+            id_botao,
+            nome,
+            tipo,
+            acao
+        )
+
+    elif opcao == "4":
+
+        id_botao = input("Digite o ID do botão que deseja deletar: ")
+
+        database.deletar_botao(id_botao)
+
+    elif opcao == "5":
+        
+        print("Saindo do programa...")
+        break
+        
+        
+
+    else:
+
+        print("Opção inválida. Tente novamente.")
