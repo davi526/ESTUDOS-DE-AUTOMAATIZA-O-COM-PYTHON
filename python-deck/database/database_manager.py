@@ -37,3 +37,27 @@ class Database:
     
         conexao.commit()
         conexao.close()
+
+
+
+    def editar_botao(self, id_botao, nome, tipo, acao):
+
+        conexao = sqlite3.connect("deck.db")
+
+        cursor = conexao.cursor()
+
+        cursor.execute("UPDATE buttons SET nome = ?, tipo = ?, acao = ? WHERE id = ?",
+                        (nome, tipo, acao, id_botao))
+
+        conexao.commit()
+        conexao.close()
+
+    def deletar_botao(self, id_botao):
+        conexao = sqlite3.connect("deck.db")
+
+        cursor = conexao.cursor()
+
+        cursor.execute("DELETE FROM buttons WHERE id = ?", (id_botao,))
+
+        conexao.commit()
+        conexao.close()
