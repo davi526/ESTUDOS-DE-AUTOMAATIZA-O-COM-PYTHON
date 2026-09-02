@@ -41,7 +41,7 @@ class HomePage:
 
     def carregar_botoes(self):
 
-        dados = self.database.listar_botoes()
+        dados = self.database.Listar_botoes()
 
         for registro in dados:
 

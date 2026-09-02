@@ -22,7 +22,7 @@ class Database:
             print("AÇÃO:", registro[3])
             print("--------------------")
 
-        conexao.close
+        conexao.close()
 
 
     def inserir_botao(self, nome, tipo, acao):
