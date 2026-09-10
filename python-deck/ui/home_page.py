@@ -1,65 +1,26 @@
-# ui/home_page.py
-
 import customtkinter as ctk
 
-from database.database_manager import Database
-from services.action_executor import executar_acao
+ctk.set_appearance_mode("dark")
+app = ctk.CTk()
+app.title("Python Deck")
+app.geometry("300x200")
 
+def mostrar_nome():
+    nome = input_nome.get()
+    resultado.configure(
+        text=f"Nome: {nome}!"
+    )
 
-class HomePage:
+titulo = ctk.CTkLabel(app, text="Python Deck")
+titulo.pack(pady=10)
 
-    def __init__(self):
+input_nome = ctk.CTkEntry(app, placeholder_text="Digite seu nome")
+input_nome.pack(pady=10)
 
-        self.database = Database()
+botao = ctk.CTkButton(app, text="Mostrar Nome", command=mostrar_nome)
+botao.pack(pady=10)
 
-        self.app = ctk.CTk()
+resultado = ctk.CTkLabel(app, text="Aqui aparecerá o nome digitado")
+resultado.pack(pady=10)
 
-        self.app.title("Python Deck")
-
-        self.app.geometry("1200x700")
-
-        self.criar_componentes()
-
-    def criar_componentes(self):
-
-        self.titulo = ctk.CTkLabel(
-            self.app,
-            text="Python Deck"
-        )
-
-        self.titulo.pack()
-
-        self.botao_novo = ctk.CTkButton(
-            self.app,
-            text="Novo Botão",
-            command=self.abrir_formulario
-        )
-
-        self.botao_novo.pack()
-
-        self.carregar_botoes()
-
-    def carregar_botoes(self):
-
-        dados = self.database.Listar_botoes()
-
-        for registro in dados:
-
-            nome = registro[1]
-            acao = registro[3]
-
-            botao = ctk.CTkButton(
-                self.app,
-                text=nome,
-                command=lambda a=acao: executar_acao(a)
-            )
-
-            botao.pack()
-
-    def abrir_formulario(self):
-
-        print("Abrir formulário")
-
-    def run(self):
-
-        self.app.mainloop()
+app.mainloop()

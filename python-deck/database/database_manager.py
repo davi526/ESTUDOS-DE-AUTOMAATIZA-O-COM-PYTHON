@@ -1,10 +1,11 @@
-import sqlite3 
+import sqlite3
 
 
 class Database:
+
     def Listar_botoes(self):
 
-        conexao = sqlite3.connect("deck.db")
+        conexao = sqlite3.connect("database/deck.db")
 
         cursor = conexao.cursor()
 
@@ -13,7 +14,8 @@ class Database:
         dados = cursor.fetchall()
 
         for registro in dados:
-            print("Regitros do banco!: ")
+
+            print("Registros do banco:")
 
             print("--------------------")
             print("ID:", registro[0])
@@ -24,40 +26,46 @@ class Database:
 
         conexao.close()
 
+        return dados
 
     def inserir_botao(self, nome, tipo, acao):
 
-        conexao = sqlite3.connect("deck.db")
+        conexao = sqlite3.connect("database/deck.db")
 
         cursor = conexao.cursor()
 
-        cursor.execute("INSERT INTO buttons" \
-        "(nome, tipo, acao)" \
-        "VALUES (?, ?, ?)", (nome, tipo, acao))
-    
+        cursor.execute(
+            "INSERT INTO buttons (nome, tipo, acao) VALUES (?, ?, ?)",
+            (nome, tipo, acao)
+        )
+
         conexao.commit()
         conexao.close()
 
-
-
     def editar_botao(self, id_botao, nome, tipo, acao):
 
-        conexao = sqlite3.connect("deck.db")
+        conexao = sqlite3.connect("database/deck.db")
 
         cursor = conexao.cursor()
 
-        cursor.execute("UPDATE buttons SET nome = ?, tipo = ?, acao = ? WHERE id = ?",
-                        (nome, tipo, acao, id_botao))
+        cursor.execute(
+            "UPDATE buttons SET nome = ?, tipo = ?, acao = ? WHERE id = ?",
+            (nome, tipo, acao, id_botao)
+        )
 
         conexao.commit()
         conexao.close()
 
     def deletar_botao(self, id_botao):
-        conexao = sqlite3.connect("deck.db")
+
+        conexao = sqlite3.connect("database/deck.db")
 
         cursor = conexao.cursor()
 
-        cursor.execute("DELETE FROM buttons WHERE id = ?", (id_botao,))
+        cursor.execute(
+            "DELETE FROM buttons WHERE id = ?",
+            (id_botao,)
+        )
 
         conexao.commit()
         conexao.close()
