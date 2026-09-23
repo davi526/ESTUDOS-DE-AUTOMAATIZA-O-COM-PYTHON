@@ -1,25 +1,40 @@
-# Importa a biblioteca SQLite que já vem com o Python
+# Importa o módulo responsável pelo SQLite
 import sqlite3
 
-# Cria uma conexão com o banco de dados
-# Se o arquivo não existir, ele será criado
-conexao = sqlite3.connect("deck.db")
+# Importa Path para criar um caminho absoluto e confiável
+from pathlib import Path
 
-# Cria um cursor para executar comandos SQL
-cursor = conexao.cursor()
 
-# Executa o comando SQL para criar a tabela
-cursor.execute("""
-CREATE TABLE IF NOT EXISTS buttons (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    nome TEXT NOT NULL,
-    tipo TEXT NOT NULL,
-    acao TEXT NOT NULL
-)
-""")
+# Identifica a pasta onde este arquivo está localizado
+PASTA_DATABASE = Path(__file__).resolve().parent
 
-# Salva as alterações feitas no banco
-conexao.commit()
+# Define o banco oficial do Python Deck
+CAMINHO_BANCO = PASTA_DATABASE / "deck.db"
 
-# Fecha a conexão com o banco
-conexao.close()
+
+def inicializar_banco():
+    """Cria as tabelas necessárias caso ainda não existam."""
+
+    # Abre uma conexão com o banco oficial
+    conexao = sqlite3.connect(CAMINHO_BANCO)
+
+    # Cria o cursor responsável pelos comandos SQL
+    cursor = conexao.cursor()
+
+    # Cria a tabela de botões caso ela ainda não exista
+    cursor.execute(
+        """
+        CREATE TABLE IF NOT EXISTS buttons (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            nome TEXT NOT NULL,
+            tipo TEXT NOT NULL,
+            acao TEXT NOT NULL
+        )
+        """
+    )
+
+    # Confirma a criação da tabela
+    conexao.commit()
+
+    # Fecha a conexão
+    conexao.close()

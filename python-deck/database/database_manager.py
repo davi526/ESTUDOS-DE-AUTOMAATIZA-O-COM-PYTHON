@@ -1,71 +1,56 @@
 import sqlite3
 
+from database.db import CAMINHO_BANCO
+
 
 class Database:
 
-    def Listar_botoes(self):
-
-        conexao = sqlite3.connect("database/deck.db")
-
-        cursor = conexao.cursor()
-
-        cursor.execute("SELECT * FROM buttons")
-
-        dados = cursor.fetchall()
-
-        for registro in dados:
-
-            print("Registros do banco:")
-
-            print("--------------------")
-            print("ID:", registro[0])
-            print("NOME:", registro[1])
-            print("TIPO:", registro[2])
-            print("AÇÃO:", registro[3])
-            print("--------------------")
-
-        conexao.close()
-
-        return dados
-
     def inserir_botao(self, nome, tipo, acao):
 
-        conexao = sqlite3.connect("database/deck.db")
+        # Abre uma conexão com o banco oficial
+        conexao = sqlite3.connect(CAMINHO_BANCO)
 
-        cursor = conexao.cursor()
+        try:
+            # Cria o cursor para executar comandos SQL
+            cursor = conexao.cursor()
 
-        cursor.execute(
-            "INSERT INTO buttons (nome, tipo, acao) VALUES (?, ?, ?)",
-            (nome, tipo, acao)
-        )
+            # Insere o novo atalho
+            cursor.execute(
+                """
+                INSERT INTO buttons (nome, tipo, acao)
+                VALUES (?, ?, ?)
+                """,
+                (nome, tipo, acao)
+            )
 
-        conexao.commit()
-        conexao.close()
+            # Confirma a operação
+            conexao.commit()
 
-    def editar_botao(self, id_botao, nome, tipo, acao):
+        finally:
+            # Garante o fechamento mesmo se ocorrer algum erro
+            conexao.close()
 
-        conexao = sqlite3.connect("database/deck.db")
+    def listar_botoes(self):
 
-        cursor = conexao.cursor()
+        # Abre uma conexão com o banco oficial
+        conexao = sqlite3.connect(CAMINHO_BANCO)
 
-        cursor.execute(
-            "UPDATE buttons SET nome = ?, tipo = ?, acao = ? WHERE id = ?",
-            (nome, tipo, acao, id_botao)
-        )
+        try:
+            # Cria o cursor para executar comandos SQL
+            cursor = conexao.cursor()
 
-        conexao.commit()
-        conexao.close()
+            # Consulta todos os botões cadastrados
+            cursor.execute(
+                """
+                SELECT id, nome, tipo, acao
+                FROM buttons
+                ORDER BY id
+                """
+            )
 
-    def deletar_botao(self, id_botao):
+            # Entrega os registros para quem chamou o método
+            return cursor.fetchall()
 
-        conexao = sqlite3.connect("database/deck.db")
-
-        cursor = conexao.cursor()
-
-        cursor.execute(
-            "DELETE FROM buttons WHERE id = ?",
-            (id_botao,)
-        )
-
-        conexao.commit()
-        conexao.close()
+        finally:
+            # Garante o fechamento mesmo se ocorrer algum erro
+            conexao.close()
