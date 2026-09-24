@@ -54,3 +54,27 @@ class Database:
         finally:
             # Garante o fechamento mesmo se ocorrer algum erro
             conexao.close()
+
+    def atualizar_botao(self, id_botao, nome, tipo, acao):
+        """Atualiza um botão existente e preserva seu ID."""
+        conexao = sqlite3.connect(CAMINHO_BANCO)
+        cursor = conexao.cursor()
+
+        try:
+            cursor.execute(
+                """
+                UPDATE buttons
+                SET nome = ?, tipo = ?, acao = ?
+                WHERE id = ?
+                """,
+                (nome, tipo, acao, id_botao)
+            )
+            conexao.commit()
+            return cursor.rowcount > 0
+        except sqlite3.Error as erro:
+            print("ERRO AO ATUALIZAR ATALHO:", erro)
+            conexao.rollback()
+            return False
+        finally:
+            cursor.close()
+            conexao.close()

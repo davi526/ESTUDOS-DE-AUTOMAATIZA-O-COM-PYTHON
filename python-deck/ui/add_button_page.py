@@ -1,4 +1,8 @@
 import customtkinter as ctk
+from pathlib import Path
+from tkinter import filedialog
+
+import customtkinter as ctk
 
 
 class AddButtonPage:
@@ -135,6 +139,20 @@ class AddButtonPage:
 			pady=8
 		)
 
+		# Botão para selecionar um executável sem executá-lo
+		self.botao_selecionar_exe = ctk.CTkButton(
+			self.janela,
+			text="Selecionar .exe",
+			width=300,
+			height=34,
+			command=self.selecionar_executavel
+		)
+
+		self.botao_selecionar_exe.pack(
+			pady=(0, 8)
+		)
+		self.atualizar_dica_acao("Aplicativo")
+
 		# Mensagem de validação
 		self.label_mensagem = ctk.CTkLabel(
 			self.janela,
@@ -226,6 +244,28 @@ class AddButtonPage:
 			)
 		)
 
+		if tipo_selecionado == "Aplicativo":
+			self.botao_selecionar_exe.pack(
+				pady=(0, 8)
+			)
+		else:
+			self.botao_selecionar_exe.pack_forget()
+
+
+	def selecionar_executavel(self):
+		"""Seleciona um arquivo .exe e preenche o campo de ação."""
+		caminho = filedialog.askopenfilename(
+			title="Selecionar aplicativo",
+			filetypes=[
+				("Aplicativos do Windows", "*.exe"),
+				("Todos os arquivos", "*.*")
+			]
+		)
+
+		if caminho:
+			self.entrada_acao.delete(0, ctk.END)
+			self.entrada_acao.insert(0, caminho)
+
 
 	def validar_dados(self, nome, tipo, acao):
 		"""Valida os dados antes de salvar no banco."""
@@ -245,6 +285,14 @@ class AddButtonPage:
 				or acao.startswith("https://")
 			):
 				return "O endereço do site deve começar com http:// ou https://."
+
+		caminho = acao.strip().strip('"').strip()
+
+		if caminho.lower().endswith(".exe"):
+			executavel = Path(caminho)
+
+			if not executavel.exists() or not executavel.is_file():
+				return "O arquivo .exe informado não existe ou não é um arquivo válido."
 
 		return None
 

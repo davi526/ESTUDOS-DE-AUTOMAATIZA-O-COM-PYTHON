@@ -4,6 +4,7 @@ import customtkinter as ctk
 # Importa a classe responsável pelo banco
 from database.database_manager import Database
 from ui.add_button_page import AddButtonPage
+from ui.edit_button_page import EditButtonPage
 from services.action_executor import executar_acao
 
 
@@ -17,6 +18,7 @@ class HomePage:
         # Cria a janela principal
         self.app = ctk.CTk()
         self.formulario_adicao = None
+        self.formulario_edicao = None
 
         # Define o título da janela
         self.app.title("Python Deck")
@@ -144,6 +146,20 @@ class HomePage:
                     command=lambda valor=acao: executar_acao(valor)
                 )
 
+                botao.bind(
+                    "<Button-3>",
+                    lambda evento,
+                           id_atual=id_botao,
+                           nome_atual=nome,
+                           tipo_atual=tipo,
+                           acao_atual=acao: self.abrir_editor(
+                               id_atual,
+                               nome_atual,
+                               tipo_atual,
+                               acao_atual
+                           )
+                )
+
             else:
 
                 # Cria uma posição livre para adicionar um novo atalho
@@ -200,6 +216,42 @@ class HomePage:
             and evento.widget == self.formulario_adicao.janela
         ):
             self.formulario_adicao = None
+
+
+    def abrir_editor(self, id_botao, nome, tipo, acao):
+        """Abre o editor do botão selecionado com o botão direito."""
+        if (
+            self.formulario_edicao is not None
+            and self.formulario_edicao.janela.winfo_exists()
+        ):
+            self.formulario_edicao.janela.focus_force()
+            return "break"
+
+        self.formulario_edicao = EditButtonPage(
+            janela_pai=self.app,
+            database=self.database,
+            id_botao=id_botao,
+            nome_atual=nome,
+            tipo_atual=tipo,
+            acao_atual=acao,
+            callback_atualizacao=self.atualizar_grade
+        )
+
+        self.formulario_edicao.janela.bind(
+            "<Destroy>",
+            self.ao_fechar_editor
+        )
+
+        return "break"
+
+
+    def ao_fechar_editor(self, evento):
+        """Remove a referência do editor quando a janela é fechada."""
+        if (
+            self.formulario_edicao is not None
+            and evento.widget == self.formulario_edicao.janela
+        ):
+            self.formulario_edicao = None
 
 
     def atualizar_grade(self):
